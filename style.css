@@ -1,0 +1,256 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul,
+li,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    transition: var(--transition);
+    color: inherit;
+    border-bottom: 2px solid transparent;
+}
+
+a:hover {
+    border-color: var(--clr-light-sky);
+}
+
+button {
+    cursor: pointer;
+    transition: var(--transition);
+    border-style: solid;
+    font-family: inherit;
+    font-weight: bold;
+}
+
+.content-hidden {
+    display: none;
+}
+
+:root {
+    --clr-dark-sky: #0c1445;
+    --clr-dark-slate: #334155;
+    --clr-dark-gray: #111827;
+    --clr-light-blue: #38bdf8;
+    --clr-blue: #1d4ed8;
+    --clr-light-sky: #e0f2fe;
+    --clr-lime: #65a30d;
+    --font-1: "Roboto", sans-serif;
+    --font-2: "Open Sans", sans-serif;
+    --transition: all 0.25s ease-in-out;
+    --border-radius: 4px;
+    --letter-spacing: 4px;
+}
+
+body {
+    font-family: var(--font-1), var(--font-2);
+}
+
+/*
+- project-container: Basically made it a grid so the it would be header and footer on top and bottom, while 
+the main-content of the project is in the middle. The entire thing has a background image, and our project should 
+never be smaller than the full view height.
+*/
+.project-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    background-image: url("./assets/images/night_background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Project's header styles and footer styles so that they match */
+#project-header,
+#project-footer {
+    background-color: rgba(
+        0,
+        0,
+        0,
+        0.8
+    ); /* Black with 80% opacity (slightly transparent) */
+
+    color: var(--clr-light-sky);
+    text-align: center;
+}
+
+/* Project header styles only */
+#project-header {
+    padding: 16px 8px;
+    grid-row: 1 / 2;
+}
+#project-header button {
+    background-color: var(--clr-dark-sky);
+    color: var(--clr-light-sky);
+}
+#project-header button:hover {
+    background-color: var(--clr-light-sky);
+    color: var(--clr-dark-sky);
+}
+#header-nav {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.site-info {
+    display: flex;
+    align-items: center;
+    flex-basis: 20%;
+    column-gap: 12px;
+}
+.weather-logo-img {
+    width: 60px;
+}
+#search-weather-form {
+    display: flex;
+    flex-basis: 45%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+#input-city-el {
+    flex: 4;
+    border: none;
+    background: var(--clr-dark-gray);
+    color: white;
+}
+#input-city-el::placeholder {
+    color: white;
+}
+#input-city-el,
+#search-weather-btn {
+    padding: 12px 6px;
+}
+#search-weather-btn {
+    flex: 1;
+    border: none;
+}
+.extra-btns {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+#temperature-toggle-btn {
+    width: 40%;
+    letter-spacing: var(--letter-spacing);
+    border: none;
+    padding: 12px 4px;
+}
+
+/* 
+Styling for the project's main-content section of the project 
+*/
+#project-main-content {
+    padding: 16px 0;
+    background-color: transparent;
+    color: white;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    place-items: center;
+}
+
+#daily-weather {
+    width: 40%;
+    background-color: var(--clr-dark-gray);
+}
+
+#daily-weather-header,
+#daily-weather-body {
+    padding: 16px 12px;
+}
+
+#daily-weather-header {
+    background-color: var(--clr-dark-gray);
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.header-top,
+.header-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Changing with on weather icon to make spacing better */
+#weather-condition-icon {
+    width: 40px;
+}
+#location-el {
+    font-size: 24px;
+}
+
+/* Styling for the body  */
+
+#daily-weather-body {
+    background-color: var(--clr-dark-slate);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.weather-data-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--clr-light-blue);
+}
+
+#weather-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 16px;
+}
+
+#weather-data-grid .weather-data-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+#weather-data-grid .weather-data-value {
+    font-size: 24px;
+}
+
+/* Styling for image container */
+#gif-container {
+    margin-top: 36px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* Error message styling */
+#no-city-found-el {
+    width: 35%;
+    background-color: var(--clr-dark-slate);
+    color: var(--clr-light-sky);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+#error-main-message-el {
+    margin-bottom: 6px;
+}
+
+/* Styling for the project's footer only */
+#project-footer {
+    grid-row: 3 / end;
+    padding: 8px 4px;
+}
+#footer-nav-el {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 4px;
+    column-gap: 12px;
+}
