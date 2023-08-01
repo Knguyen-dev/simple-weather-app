@@ -141,7 +141,7 @@ never be smaller than the full view height.
     align-items: center;
     justify-content: flex-end;
 }
-#temperature-toggle-btn {
+#toggle-units-btn {
     width: 40%;
     letter-spacing: var(--letter-spacing);
     border: none;
@@ -222,24 +222,27 @@ Styling for the project's main-content section of the project
     font-size: 24px;
 }
 
+/* Styling for the forecast table */
+#forecast-data-table {
+    margin-top: 36px;
+    table-layout: fixed;
+    color: white;
+    border-collapse: collapse;
+    text-align: center;
+
+    border: 2px solid white;
+}
+
+#forecast-data-table th,
+#forecast-data-table tr {
+    padding: 16px;
+}
+
 /* Styling for image container */
 #gif-container {
     margin-top: 36px;
     border-radius: var(--border-radius);
     overflow: hidden;
-}
-
-/* Error message styling */
-#no-city-found-el {
-    width: 35%;
-    background-color: var(--clr-dark-slate);
-    color: var(--clr-light-sky);
-    padding: 12px;
-    border-radius: var(--border-radius);
-    text-align: center;
-}
-#error-main-message-el {
-    margin-bottom: 6px;
 }
 
 /* Styling for the project's footer only */
