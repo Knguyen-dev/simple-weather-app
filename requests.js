@@ -98,7 +98,14 @@ function fetchForecastData(locationStr, numDays = 3, getAirQuality = true) {
             return processWeatherData(data);
         })
         .catch((error) => {
-            console.error(`fetchForecastData error: ${error}`);
+            if (error instanceof Response) {
+                console.error(
+                    `fetchForecastData error, throwing response: ${error}`
+                );
+                throw error;
+            } else {
+                console.error(`fetchForecastData error: ${error}`);
+            }
         });
 }
 
@@ -117,7 +124,12 @@ function fetchGifURL(searchTerm) {
             return jsonData.data.images.original.url;
         })
         .catch((error) => {
-            console.error(`fetchGifURL error: ${error}`);
+            if (error instanceof Response) {
+                console.error(`fetchGifURL error, throwing response: ${error}`);
+                throw error;
+            } else {
+                console.error(`fetchGifURL error: ${error}`);
+            }
         });
 }
 

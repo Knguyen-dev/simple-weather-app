@@ -11,6 +11,9 @@ li,
 ol {
     list-style: none;
 }
+fieldset {
+    border: none;
+}
 
 a {
     text-decoration: none;
@@ -52,6 +55,56 @@ button {
 
 body {
     font-family: var(--font-1), var(--font-2);
+}
+
+/* Styling for content, overlay, and our modal (error section) */
+.content {
+    position: relative;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 
+	- pointer-events: none; We don't want this attribute because we 
+	want the user to close the overlay and modal before continuing. 
+	*/
+}
+.error-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 12px;
+    background-color: var(--clr-light-blue);
+    color: var(--clr-dark-sky);
+    padding: 16px 12px;
+    border-radius: var(--border-radius);
+}
+
+/* 
+- Do chaining so that if it also has .content-hidden class, we do display none. 
+This is to override the display: flex.
+*/
+.error-section.content-hidden {
+    display: none;
+}
+
+#close-error-btn {
+    padding: 8px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    color: inherit;
+}
+#close-error-btn:hover {
+    background-color: var(--clr-dark-sky);
+    color: var(--clr-light-blue);
 }
 
 /*
@@ -236,6 +289,41 @@ Styling for the project's main-content section of the project
 #forecast-data-table th,
 #forecast-data-table tr {
     padding: 16px;
+}
+
+/* Styling for unit conversion or usage of percentages*/
+.temp-el[data-is-metric-units="false"]::after {
+    content: " °F";
+}
+.temp-el[data-is-metric-units="true"]::after {
+    content: " °C";
+}
+.precipitation-el[data-is-metric-units="false"]::after {
+    content: " in";
+}
+.precipitation-el[data-is-metric-units="true"]::after {
+    content: " mm";
+}
+.wind-speed-el[data-is-metric-units="false"]::after {
+    content: " mph";
+}
+.wind-speed-el[data-is-metric-units="true"]::after {
+    content: " kph";
+}
+.wind-speed-el[data-is-metric-units="false"]::after {
+    content: " mph";
+}
+.wind-speed-el[data-is-metric-units="true"]::after {
+    content: " kph";
+}
+.pressure-el[data-is-metric-units="false"]::after {
+    content: " in";
+}
+.pressure-el[data-is-metric-units="true"]::after {
+    content: " mb";
+}
+.uses-percentage::after {
+    content: "%";
 }
 
 /* Styling for image container */

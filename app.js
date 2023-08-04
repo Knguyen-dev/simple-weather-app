@@ -2,8 +2,8 @@ import * as requests from "./requests.js";
 import {
     infoModule,
     DomModule,
-    displayGifRequestError,
-    displayWeatherRequestError,
+    unitModule,
+    displayErrorSection,
 } from "./modules.js";
 
 // Event listener for form or search bar; searches weather based on what's in the
@@ -19,6 +19,9 @@ DomModule.searchWeatherForm.addEventListener("submit", (event) => {
 that's on the screen, and then having logic to display the values with 
 different units. So in the case that the user inputted a bad city, they still
 can convert units for the current city they have, which is valid.
+
+- NOTE: We do renderWeatherData because we're not really interested in 
+rendering a new gif, when all we really want is updated units on the weather data
 */
 DomModule.toggleUnitsBtn.addEventListener("click", () => {
     // If we're using metric, then we change to imperial
@@ -30,7 +33,7 @@ DomModule.toggleUnitsBtn.addEventListener("click", () => {
         infoModule.isMetric = true;
         DomModule.toggleUnitsBtn.textContent = "Standard";
     }
-    renderWeatherSearch(infoModule.currentCity);
+    renderWeatherData(infoModule.currentCity);
 });
 
 // Request for and display a gif
@@ -38,8 +41,8 @@ async function renderGif() {
     try {
         const gifURL = await requests.fetchGifURL(infoModule.gifSearchTerm);
         DomModule.gifImg.src = gifURL;
-    } catch (error) {
-        displayGifRequestError();
+    } catch (response) {
+        displayErrorSection(response);
     }
 }
 
@@ -47,92 +50,100 @@ async function renderGif() {
 async function renderWeatherData(inputLocation) {
     try {
         // Check if user's input city worked by doing a fetch request for the data
-        const weatherData = await requests.fetchForecastData(inputLocation);
-        // Fill out fields of information for the daily-weather-section
-        DomModule.locationEl.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
-        DomModule.weatherConditionImg.src = weatherData.current.weatherIcon;
-        DomModule.localTimeEl.textContent = weatherData.location.localtime;
-        DomModule.weatherConditionText.textContent =
-            weatherData.current.weatherCondition;
-        // Decide whether to display metric or imperial units
-        if (infoModule.isMetric) {
-            DomModule.tempEl.textContent = `${weatherData.current.temp_c} celsius`;
-            DomModule.feelsLikeTempEl.textContent = `${weatherData.current.feelslike_c} celsius`;
-            DomModule.windSpeedEl.textContent = `${weatherData.current.wind_kph} kph`;
-            DomModule.precipitationEl.textContent = `${weatherData.current.precip_mm} mm`;
-            DomModule.pressureEl.textContent = `${weatherData.current.pressure_mb} mb`;
-        } else {
-            DomModule.tempEl.textContent = `${weatherData.current.temp_f} fahrenheit`;
-            DomModule.feelsLikeTempEl.textContent = `${weatherData.current.feelslike_f} fahrenheit`;
-            DomModule.windSpeedEl.textContent = `${weatherData.current.wind_mph} mph`;
-            DomModule.precipitationEl.textContent = `${weatherData.current.precip_in} in`;
-            DomModule.pressureEl.textContent = `${weatherData.current.pressure_in} in`;
-        }
-        DomModule.humidityEl.textContent = `${weatherData.current.humidity}%`;
-        DomModule.cloudCoverageEl.textContent = `${weatherData.current.cloud}%`;
-        DomModule.uvIndexEl.textContent = weatherData.current.uv;
+        const data = await requests.fetchForecastData(inputLocation);
 
-        // Fill out table of information for the forecast days
-        DomModule.forecastTableBody.innerHTML = weatherData.forecast
+        // Fill out forecast data table
+        DomModule.forecastTableBody.innerHTML = data.forecast
             .map((day) => {
                 return `
-					<tr class="forecast-day">
-						<th class="forecast-date-el">${day.forecastDate}</th>
-						<th class="forecast-weather-condition-el">
-							<img src="${day.weatherIcon}" alt="some icon" />
-						</th>
-						<th class="forecast-chance-rain-el">${day.daily_chance_of_rain}%</th>
-						<th class="forecast-humidity-el">${day.avghumidity}%</th>
-						<th class="forecast-precipitation-el">
-							${infoModule.isMetric ? day.totalprecip_mm : day.totalprecip_in}
-							${infoModule.isMetric ? "mm" : "in"}
-						</th>
-						<th class="forecast-avg-temp-el">
-							${infoModule.isMetric ? day.avgtemp_c : day.avgtemp_f}
-							${infoModule.isMetric ? "celsius" : "fahrenheit"}
-						</th>
-						<th class="forecast-high-temp-el">
-							${infoModule.isMetric ? day.maxtemp_c : day.maxtemp_f}
-							${infoModule.isMetric ? "celsius" : "fahrenheit"}
-						</th>
-						<th class="forecast-low-temp-el">
-							${infoModule.isMetric ? day.mintemp_c : day.mintemp_f}
-							${infoModule.isMetric ? "celsius" : "fahrenheit"}
-						</th>
-					</tr>
+				<tr class="forecast-day">
+					<th class="forecast-date-el">${day.forecastDate}</th>
+					<th class="forecast-weather-condition-el">
+						<img src="${day.weatherIcon}" alt="some icon" />
+					</th>
+					<th class="${unitModule["chance rain"]} ${unitModule.usePercent}">
+						${day.daily_chance_of_rain}
+					</th>
+					<th class="${unitModule.humidity} ${unitModule.usePercent}">
+						${day.avghumidity}
+					</th>
+					<th class="${unitModule.precipitation} ${unitModule.unitConversion}">
+						${infoModule.isMetric ? day.totalprecip_mm : day.totalprecip_in}
+					</th>
+					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+						${infoModule.isMetric ? day.avgtemp_c : day.avgtemp_f}
+					</th>
+					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+						${infoModule.isMetric ? day.maxtemp_c : day.maxtemp_f}
+					</th>
+					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+						${infoModule.isMetric ? day.mintemp_c : day.mintemp_f}
+					</th>
+				</tr>
 				`;
             })
             .join("");
 
-        // At this point user's input city is valid, so make it the new current city
-        infoModule.currentCity = inputLocation;
+        // Get all element where we can convert units and change their data attribute 'isMetricUnits'
+        const unitElements = document.querySelectorAll(".units-can-convert");
+        unitElements.forEach((element) => {
+            element.setAttribute("data-is-metric-units", infoModule.isMetric);
+        });
 
-        // Capture the weather condition text as a gif search term to render a gif
-        // Then call function to render that gif
-        infoModule.gifSearchTerm = weatherData.current.weatherCondition;
-    } catch (error) {
-        displayWeatherRequestError();
+        // Fill out fields of information for the daily-weather-section
+        DomModule.locationEl.textContent = `${data.location.name}, ${data.location.country}`;
+        DomModule.weatherConditionImg.src = data.current.weatherIcon;
+        DomModule.localTimeEl.textContent = data.location.localtime;
+        DomModule.weatherConditionText.textContent =
+            data.current.weatherCondition;
+        // Decide whether to display metric or imperial units for the daily-weather-section
+        if (infoModule.isMetric) {
+            DomModule.tempEl.textContent = data.current.temp_c;
+            DomModule.feelsLikeTempEl.textContent = data.current.feelslike_c;
+            DomModule.windSpeedEl.textContent = data.current.wind_kph;
+            DomModule.precipitationEl.textContent = data.current.precip_mm;
+            DomModule.pressureEl.textContent = data.current.pressure_mb;
+        } else {
+            DomModule.tempEl.textContent = data.current.temp_f;
+            DomModule.feelsLikeTempEl.textContent = data.current.feelslike_f;
+            DomModule.windSpeedEl.textContent = data.current.wind_mph;
+            DomModule.precipitationEl.textContent = data.current.precip_in;
+            DomModule.pressureEl.textContent = data.current.pressure_in;
+        }
+        DomModule.humidityEl.textContent = data.current.humidity;
+        DomModule.cloudCoverageEl.textContent = data.current.cloud;
+        DomModule.uvIndexEl.textContent = data.current.uv;
+
+        /*
+		- At this point user's input city is valid, so make it the new current city
+        - Capture the weather condition text as a gif search term to render a gif
+         	Then call function to render that gif
+		*/
+        infoModule.currentCity = inputLocation;
+        infoModule.gifSearchTerm = data.current.weatherCondition;
+    } catch (response) {
+        displayErrorSection(response);
     }
 }
 
 /*
 - Searches for and displays weather information based on 'inputLocation', which
 is a string for a given city
-
 - Goes through entire search process of fetching and rendering data and 
 elements for the weather.
 */
 async function renderWeatherSearch(inputLocation) {
-    try {
-        // Wait for renderWeatherData to complete before renderGif()
-        // so that infoModule.gifSearchTerm has a value
-        await renderWeatherData(inputLocation);
-
-        // At this point, we know renderWeatherData worked, so we can renderGif
-        renderGif();
-    } catch (error) {
-        console.error(`renderWeatherSearch error: ${error}`);
-    }
+    /*
+	- Wait for renderWeatherData to complete before renderGif()
+     	so that infoModule.gifSearchTerm has a value
+	*/
+    await renderWeatherData(inputLocation);
+    /*
+	- If renderWeatherData worked, we render a gif correctly. Else, renderGif still runs, 
+		but an error will happen, so no gif will be loaded. Or a gif will be loaded using 
+		the previous gifSearchTerm, which assumes a previous search worked
+	*/
+    renderGif();
 }
 
 window.addEventListener("DOMContentLoaded", () => {

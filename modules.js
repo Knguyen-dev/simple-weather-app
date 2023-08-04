@@ -8,10 +8,35 @@ const infoModule = {
     isMetric: true, // whether or not we are using the metric or imperial system
 };
 
+// Object of general classes for showing percentages and unit symbols
+const unitModule = {
+    temp: "temp-el",
+    "chance rain": "chance-rain-el",
+    "wind speed": "wind-speed-el",
+    precipitation: "precipitation-el",
+    pressure: "pressure-el",
+    "cloud coverage": "cloud-coverage-el",
+    "Uv Index": "uv-index-el",
+    humidity: "humidity-el",
+    precipitation: "precipitation-el",
+    pressure: "pressure-el",
+    unitConversion: "units-can-convert",
+    usePercent: "uses-percentage",
+};
+
 // IFFE returns a module containing  all of the necessary DOM elements that may be needed
 const DomModule = (() => {
     // Puts all of content and elements onto the screen
     loadInitialPage();
+
+    const overlayDiv = document.querySelector(".overlay");
+    const errorSection = document.querySelector(".error-section");
+
+    const mainErrorEl = document.querySelector("#main-error-message");
+    const subErrorEl = document.querySelector("#sub-error-message");
+
+    const closeErrorBtn = document.querySelector("#close-error-btn");
+    closeErrorBtn.addEventListener("click", hideErrorSection);
 
     // Query all of the necessary DOM elements that you need after page has loaded
     // and elements are on the DOM
@@ -20,6 +45,8 @@ const DomModule = (() => {
     // Have city element contain the current city as its value in the search bar
     const inputCityEl = document.querySelector("#input-city-el");
     inputCityEl.value = infoModule.currentCity;
+
+    // Get all unit convertable elements
 
     // Get button for toggling the units and change its text based on the starting
     // settings
@@ -44,13 +71,17 @@ const DomModule = (() => {
         "#weather-condition-text"
     );
     const tempEl = document.querySelector("#current-temp-el");
-    const feelsLikeTempEl = document.querySelector("#feels-like-temp-el");
-    const humidityEl = document.querySelector("#humidity-el");
-    const windSpeedEl = document.querySelector("#wind-speed-el");
-    const precipitationEl = document.querySelector("#precipitation-el");
-    const cloudCoverageEl = document.querySelector("#cloud-coverage-el");
-    const pressureEl = document.querySelector("#pressure-el");
-    const uvIndexEl = document.querySelector("#uv-index-el");
+    const feelsLikeTempEl = document.querySelector(
+        "#current-feels-like-temp-el"
+    );
+    const humidityEl = document.querySelector("#current-humidity-el");
+    const windSpeedEl = document.querySelector("#current-wind-speed-el");
+    const precipitationEl = document.querySelector("#current-precipitation-el");
+    const cloudCoverageEl = document.querySelector(
+        "#current-cloud-coverage-el"
+    );
+    const pressureEl = document.querySelector("#current-pressure-el");
+    const uvIndexEl = document.querySelector("#current-uv-index-el");
 
     const dailyWeatherSection = document.querySelector("#daily-weather");
     const gifContainer = document.querySelector("#gif-container");
@@ -59,6 +90,11 @@ const DomModule = (() => {
     const forecastTableBody = document.querySelector("#forecast-table-body");
 
     return {
+        overlayDiv,
+        errorSection,
+        mainErrorEl,
+        subErrorEl,
+        closeErrorBtn,
         searchWeatherForm,
         inputCityEl,
         toggleUnitsBtn,
@@ -82,21 +118,24 @@ const DomModule = (() => {
     };
 })();
 
-// Simple functions that give the user alerts when a request went wrong
-// So when a user enters a bad city name, we'll tell them what went wrong
-
-function displayGifRequestError() {
-    window.alert("Gif Request Error: Issue rendering gif");
+function hideErrorSection() {
+    DomModule.overlayDiv.classList.add("content-hidden");
+    DomModule.errorSection.classList.add("content-hidden");
 }
-function displayWeatherRequestError() {
-    window.alert(
-        "Weather Request Error: Having issues getting weather data. Please make sure you're entering in a valid city!"
-    );
+
+// Handles and displays errors, uses an http response object to help
+// tell the user what happened
+async function displayErrorSection(response) {
+    DomModule.overlayDiv.classList.remove("content-hidden");
+    DomModule.errorSection.classList.remove("content-hidden");
+    const jsonData = await response.json();
+    DomModule.subErrorEl.textContent = jsonData.error.message;
 }
 
 export {
     infoModule,
     DomModule,
-    displayGifRequestError,
-    displayWeatherRequestError,
+    unitModule,
+    hideErrorSection,
+    displayErrorSection,
 };
