@@ -1,3 +1,9 @@
+/*
+- File for creating and returning the initial page elements
+
+
+*/
+
 import { unitModule } from "./modules.js";
 
 function createProjectHeader() {
@@ -37,8 +43,8 @@ function createProjectHeader() {
     const extraBtnsSection = document.createElement("section");
     extraBtnsSection.className = "extra-btns";
     extraBtnsSection.innerHTML = `
+		<button id="toggle-theme-btn">Dark</button>
 		<button id="toggle-units-btn">
-			Metric
 		</button>
 		`;
 
@@ -79,7 +85,7 @@ function createProjectMainContent() {
     const dailyWeatherHeader = document.createElement("section");
     dailyWeatherHeader.id = "daily-weather-header";
     dailyWeatherHeader.innerHTML = `
-		<div class="header-top">
+		<div class="daily-weather-header-top">
 			<h1 id="location-el"></h1>
 			<img
 				id="weather-condition-icon"
@@ -87,7 +93,7 @@ function createProjectMainContent() {
 				alt="Weather Icon"
 			/>
 		</div>
-		<div class="header-bottom">
+		<div class="daily-weather-header-bottom">
 			<p id="local-time-el">
 			05-07-2022 5:42
 			</p>
@@ -125,7 +131,7 @@ function createProjectMainContent() {
         "Wind Speed": {
             displayText: "Wind Speed",
             id: "current-wind-speed-el",
-            classes: [unitModule["wind speed"], unitModule.usePercent],
+            classes: [unitModule["wind speed"], unitModule.unitConversion],
         },
         Precipitation: {
             displayText: "Precipitation",
@@ -252,7 +258,7 @@ function createProjectFooter() {
 
 // Fills an empty DOM with elements from the initial page, header, maincontent, etc.
 // Could also be 'create initial page '
-function loadInitialPage() {
+function createInitialPage() {
     // Create our two root or outer most containers
     const contentDiv = document.createElement("div");
     contentDiv.className = "content";
@@ -271,13 +277,13 @@ function loadInitialPage() {
     const projectFooter = createProjectFooter();
 
     // Append elements according to the proper structure of the mark up
-    document.body.appendChild(contentDiv);
     contentDiv.appendChild(overlayDiv);
     contentDiv.appendChild(errorSection);
     contentDiv.appendChild(projectContainer);
     projectContainer.appendChild(projectHeader);
     projectContainer.appendChild(projectMainContentSection);
     projectContainer.appendChild(projectFooter);
+    return contentDiv;
 }
 
-export { loadInitialPage };
+export { createInitialPage };

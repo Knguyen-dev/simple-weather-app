@@ -23,7 +23,7 @@ a {
 }
 
 a:hover {
-    border-color: var(--clr-light-sky);
+    border-color: white;
 }
 
 button {
@@ -42,10 +42,9 @@ button {
     --clr-dark-sky: #0c1445;
     --clr-dark-slate: #334155;
     --clr-dark-gray: #111827;
+    --clr-emerald: #10b981;
+    --clr-light-teal: #5eead4;
     --clr-light-blue: #38bdf8;
-    --clr-blue: #1d4ed8;
-    --clr-light-sky: #e0f2fe;
-    --clr-lime: #65a30d;
     --font-1: "Roboto", sans-serif;
     --font-2: "Open Sans", sans-serif;
     --transition: all 0.25s ease-in-out;
@@ -68,16 +67,19 @@ body {
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    /* 
-	- pointer-events: none; We don't want this attribute because we 
-	want the user to close the overlay and modal before continuing. 
-	*/
+    /* Make sure the overlay actually goes over the regular screen */
+    z-index: 1;
 }
 .error-section {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* 
+	- z-index: 2 allows the error-section to go above the overlay, making it 
+		interactable 
+	*/
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,18 +124,25 @@ never be smaller than the full view height.
     background-position: center;
 }
 
+/*
+- project-container: for smooth image transition
+- Rest of them: For smooth color changing when switching themes.
+*/
+.project-container,
+#project-header,
+#project-footer,
+#daily-weather-header,
+#daily-weather-body {
+    transition: var(--transition);
+}
+
 /* Project's header styles and footer styles so that they match */
 #project-header,
 #project-footer {
-    background-color: rgba(
-        0,
-        0,
-        0,
-        0.8
-    ); /* Black with 80% opacity (slightly transparent) */
-
-    color: var(--clr-light-sky);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
     text-align: center;
+    font-weight: 700;
 }
 
 /* Project header styles only */
@@ -142,11 +151,12 @@ never be smaller than the full view height.
     grid-row: 1 / 2;
 }
 #project-header button {
+    border: 2px solid var(--clr-dark-sky);
     background-color: var(--clr-dark-sky);
-    color: var(--clr-light-sky);
+    color: white;
 }
 #project-header button:hover {
-    background-color: var(--clr-light-sky);
+    background-color: white;
     color: var(--clr-dark-sky);
 }
 #header-nav {
@@ -165,11 +175,27 @@ never be smaller than the full view height.
 .weather-logo-img {
     width: 60px;
 }
+
+/* 
+- flex-basis: gives the search bar lots of space
+- overflow hidden and border-radius: creates a rounded look for the input section
+	and then the searc hbutton
+- input-city-el and search-weather-btn with flex: We wanted the input-city-el to
+	have most of the space in the form so we gave it 4/5 slices whilst search button
+	has 1 / 5 slices.
+*/
+
 #search-weather-form {
     display: flex;
     flex-basis: 45%;
     border-radius: var(--border-radius);
     overflow: hidden;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+#input-city-el,
+#search-weather-btn {
+    padding: 12px 6px;
 }
 #input-city-el {
     flex: 4;
@@ -180,10 +206,6 @@ never be smaller than the full view height.
 #input-city-el::placeholder {
     color: white;
 }
-#input-city-el,
-#search-weather-btn {
-    padding: 12px 6px;
-}
 #search-weather-btn {
     flex: 1;
     border: none;
@@ -192,37 +214,35 @@ never be smaller than the full view height.
     flex: 2;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    column-gap: 16px;
 }
-#toggle-units-btn {
-    width: 40%;
+.extra-btns button {
+    padding: 12px 8px;
     letter-spacing: var(--letter-spacing);
     border: none;
-    padding: 12px 4px;
+    flex: 1;
 }
 
 /* 
-Styling for the project's main-content section of the project 
+- Styling for the project's main-content section of the project:
+	1. Grid: Doesn't need grid, but we wanted the daily-weather-section to take up
+		a minimal amount of space, whilst the forecast section got the rest of the space.
+	2. width 40%: Gives the daily-weather-section some extra space to make it look alright
 */
 #project-main-content {
     padding: 16px 0;
-    background-color: transparent;
     color: white;
     display: grid;
     grid-template-rows: auto 1fr;
     place-items: center;
 }
-
 #daily-weather {
     width: 40%;
-    background-color: var(--clr-dark-gray);
 }
-
 #daily-weather-header,
 #daily-weather-body {
     padding: 16px 12px;
 }
-
 #daily-weather-header {
     background-color: var(--clr-dark-gray);
     display: flex;
@@ -231,8 +251,8 @@ Styling for the project's main-content section of the project
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
 }
-.header-top,
-.header-bottom {
+.daily-weather-header-top,
+.daily-weather-header-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -247,26 +267,22 @@ Styling for the project's main-content section of the project
 }
 
 /* Styling for the body  */
-
 #daily-weather-body {
     background-color: var(--clr-dark-slate);
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
 }
-
+#weather-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 16px;
+}
 .weather-data-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     color: var(--clr-light-blue);
 }
-
-#weather-data-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 16px;
-}
-
 #weather-data-grid .weather-data-name {
     font-size: 16px;
     font-weight: 700;
@@ -282,10 +298,8 @@ Styling for the project's main-content section of the project
     color: white;
     border-collapse: collapse;
     text-align: center;
-
     border: 2px solid white;
 }
-
 #forecast-data-table th,
 #forecast-data-table tr {
     padding: 16px;
@@ -344,4 +358,34 @@ Styling for the project's main-content section of the project
     justify-content: center;
     padding: 12px 4px;
     column-gap: 12px;
+}
+
+/* 
+- Light mode styling: Basically we're just changing the background-image and 
+the color on the main containers and whatnot.
+*/
+.light-mode .project-container {
+    background-image: url("./assets/images/day_mountain.jpg");
+}
+.light-mode #project-header,
+.light-mode #project-footer {
+    background-color: transparent;
+}
+.light-mode #project-header button {
+    background-color: transparent;
+    color: var(--clr-dark-sky);
+}
+.light-mode #project-header button:hover {
+    background-color: var(--clr-dark-sky);
+    color: white;
+}
+
+.light-mode #daily-weather-header {
+    background-color: var(--clr-emerald);
+}
+.light-mode #daily-weather-body {
+    background-color: var(--clr-light-teal);
+}
+.light-mode .weather-data-item {
+    color: var(--clr-dark-sky);
 }
