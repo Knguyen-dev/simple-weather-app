@@ -69,26 +69,30 @@ async function renderWeatherData(inputLocation) {
             .map((day) => {
                 return `
 				<tr class="forecast-day">
-					<th class="forecast-date-el">${day.forecastDate}</th>
-					<th class="forecast-weather-condition-el">
+					<th class="date-col forecast-date-el">${day.forecastDate}</th>
+					<th class="weather-condition-col forecast-weather-condition-el">
 						<img src="${day.weatherIcon}" alt="some icon" />
 					</th>
-					<th class="${unitModule["chance rain"]} ${unitModule.usePercent}">
+					<th class="chance-rain-col ${unitModule["chance rain"]} ${
+                    unitModule.usePercent
+                }">
 						${day.daily_chance_of_rain}
 					</th>
-					<th class="${unitModule.humidity} ${unitModule.usePercent}">
+					<th class="humidity-col ${unitModule.humidity} ${unitModule.usePercent}">
 						${day.avghumidity}
 					</th>
-					<th class="${unitModule.precipitation} ${unitModule.unitConversion}">
+					<th class="precipiation-col ${unitModule.precipitation} ${
+                    unitModule.unitConversion
+                }">
 						${infoModule.isMetric ? day.totalprecip_mm : day.totalprecip_in}
 					</th>
-					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+					<th class="avg-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
 						${infoModule.isMetric ? day.avgtemp_c : day.avgtemp_f}
 					</th>
-					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+					<th class="high-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
 						${infoModule.isMetric ? day.maxtemp_c : day.maxtemp_f}
 					</th>
-					<th class="${unitModule.temp} ${unitModule.unitConversion}">
+					<th class="low-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
 						${infoModule.isMetric ? day.mintemp_c : day.mintemp_f}
 					</th>
 				</tr>

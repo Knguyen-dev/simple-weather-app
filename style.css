@@ -15,6 +15,12 @@ fieldset {
     border: none;
 }
 
+img,
+picture,
+video {
+    max-width: 100%;
+}
+
 a {
     text-decoration: none;
     transition: var(--transition);
@@ -291,13 +297,23 @@ never be smaller than the full view height.
     font-size: 24px;
 }
 
+/* Styling for the forecast-section */
+#forecast-section {
+    background-color: orange;
+    width: 80%;
+}
+.forecast-row {
+    display: flex;
+}
+
 /* Styling for the forecast table */
+#forecast-table-container {
+    overflow-x: auto;
+}
 #forecast-data-table {
-    margin-top: 36px;
     table-layout: fixed;
     color: white;
     border-collapse: collapse;
-    text-align: center;
     border: 2px solid white;
 }
 #forecast-data-table th,
@@ -343,6 +359,7 @@ never be smaller than the full view height.
 /* Styling for image container */
 #gif-container {
     margin-top: 36px;
+    margin-bottom: 36px;
     border-radius: var(--border-radius);
     overflow: hidden;
 }
@@ -388,4 +405,36 @@ the color on the main containers and whatnot.
 }
 .light-mode .weather-data-item {
     color: var(--clr-dark-sky);
+}
+
+/* Making it a little responsive  */
+@media screen and (max-width: 800px) {
+    #header-nav {
+        flex-direction: column;
+        row-gap: 1em;
+    }
+    #weather-data-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .low-temp-col {
+        display: none;
+    }
+}
+@media screen and (max-width: 650px) {
+    .high-temp-col {
+        display: none;
+    }
+}
+@media screen and (max-width: 550px) {
+    .weather-condition-col {
+        display: none;
+    }
+}
+@media screen and (max-width: 450px) {
+    .weather-condition-col {
+        display: none;
+    }
 }

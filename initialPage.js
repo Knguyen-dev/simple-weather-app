@@ -189,6 +189,10 @@ function createProjectMainContent() {
     gifImg.alt = "Weather related gif";
     gifContainer.appendChild(gifImg);
 
+    // Create div container for table so that it doesn't overflow
+    const tableContainer = document.createElement("div");
+    tableContainer.id = "forecast-table-container";
+
     // Create table for the forecast data
     const forecastTable = document.createElement("table");
     forecastTable.id = "forecast-data-table";
@@ -198,14 +202,14 @@ function createProjectMainContent() {
 		</caption>
 		<thead id="forecast-row-labels">
 			<tr>
-				<th>Date</th>
-				<th>Weather Condition</th>
-				<th>Chance of Rain</th>
-				<th>Humidity</th>
-				<th>Precipitation</th>
-				<th>Avg. Temp</th>
-				<th>High Temp</th>
-				<th>Low Temp</th>
+				<th class="date-col" >Date</th>
+				<th class="weather-condition-col" >Weather Condition</th>
+				<th class="chance-rain-col" >Chance of Rain</th>
+				<th class="humidity-col" >Humidity</th>
+				<th class="precipiation-col" >Precipitation</th>
+				<th class="avg-temp-col" >Avg. Temp</th>
+				<th class="high-temp-col" >High Temp</th>
+				<th class="low-temp-col" >Low Temp</th>
 			</tr>
 		</thead>
 		<tbody id="forecast-table-body">
@@ -218,7 +222,8 @@ function createProjectMainContent() {
     dailyWeatherSection.appendChild(dailyWeatherBody);
     dailyWeatherBody.appendChild(weatherDataGrid);
     mainContentSection.appendChild(gifContainer);
-    mainContentSection.appendChild(forecastTable);
+    tableContainer.appendChild(forecastTable);
+    mainContentSection.appendChild(tableContainer);
     return mainContentSection;
 }
 
