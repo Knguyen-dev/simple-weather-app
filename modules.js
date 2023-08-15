@@ -30,19 +30,17 @@ const DomModule = (() => {
     const initialPage = createInitialPage();
     document.body.appendChild(initialPage);
 
+    // Query all of the necessary DOM elements that you need after page has loaded
+    // and elements are on the DOM
     const overlayDiv = document.querySelector(".overlay");
     const errorSection = document.querySelector(".error-section");
     const mainErrorEl = document.querySelector("#main-error-message");
     const subErrorEl = document.querySelector("#sub-error-message");
     const closeErrorBtn = document.querySelector("#close-error-btn");
 
-    // Query all of the necessary DOM elements that you need after page has loaded
-    // and elements are on the DOM
     const searchWeatherForm = document.querySelector("#search-weather-form");
     const inputCityEl = document.querySelector("#input-city-el");
 
-    // Get button for toggling the units and change its text based on the starting
-    // settings
     const toggleUnitsBtn = document.querySelector("#toggle-units-btn");
 
     const toggleThemeBtn = document.querySelector("#toggle-theme-btn");

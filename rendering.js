@@ -7,6 +7,7 @@ function hideErrorSection() {
     DomModule.errorSection.classList.add("content-hidden");
 }
 
+// Displays modal for the error section
 async function displayErrorSection(response) {
     DomModule.overlayDiv.classList.remove("content-hidden");
     DomModule.errorSection.classList.remove("content-hidden");
@@ -17,34 +18,15 @@ async function displayErrorSection(response) {
 // ***** Rendering page theme dark/light*****
 function renderPageTheme() {
     if (infoModule.isDarkTheme) {
+        DomModule.toggleThemeBtn.textContent = "Light";
         document.body.classList.remove("light-mode");
     } else {
+        DomModule.toggleThemeBtn.textContent = "Dark";
         document.body.classList.add("light-mode");
     }
 }
 
-function togglePageTheme() {
-    if (infoModule.isDarkTheme) {
-        DomModule.toggleThemeBtn.textContent = "Dark";
-        infoModule.isDarkTheme = false;
-    } else {
-        DomModule.toggleThemeBtn.textContent = "Light";
-        infoModule.isDarkTheme = true;
-    }
-    renderPageTheme();
-}
-
 // ***** Rendering weather data and units*****
-function toggleUnits() {
-    if (infoModule.isMetric) {
-        infoModule.isMetric = false;
-        DomModule.toggleUnitsBtn.textContent = "Metric";
-    } else {
-        infoModule.isMetric = true;
-        DomModule.toggleUnitsBtn.textContent = "Standard";
-    }
-    renderWeatherData(infoModule.currentCity);
-}
 
 // Fetch and update the url for the gif
 async function renderGif() {
@@ -153,46 +135,29 @@ async function renderWeatherSearch(inputLocation) {
     renderGif();
 }
 
-// Sets up page event listeners
-function setupPageListeners() {
-    // Create listener for toggling the units and set up its text
+// Renders in an appropriate initial page
+function renderInitialPage() {
+    // Set up text for the unit toggling button
     if (infoModule.isMetric) {
         DomModule.toggleUnitsBtn.textContent = "Standard";
     } else {
         DomModule.toggleUnitsBtn.textContent = "Metric";
     }
-    DomModule.toggleUnitsBtn.addEventListener("click", toggleUnits);
 
-    // Create listener for toggling the theme of the page and set up the starting text
-    if (infoModule.isDarkTheme) {
-        DomModule.toggleThemeBtn.textContent = "Light";
-    } else {
-        DomModule.toggleThemeBtn.textContent = "Dark";
-    }
-    DomModule.toggleThemeBtn.addEventListener("click", togglePageTheme);
-
-    // Create event listener for toggling
+    // Render and display the default city in the search bar
     DomModule.inputCityEl.value = infoModule.currentCity;
-    DomModule.searchWeatherForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        renderWeatherSearch(DomModule.inputCityEl.value);
-    });
 
-    // Create event listener for closing the error window
-    DomModule.closeErrorBtn.addEventListener("click", hideErrorSection);
-}
-
-/*
-- loadPage: Important main function that loads in the working page
-	1. It adds in the event listeners
-	2. Loads in the starting theme of the page 
-	3. Searches and displays the weather for the current city, which we 
-		set to a default value in the infoModule
-*/
-function loadPage() {
-    setupPageListeners();
+    // Render the default page theme
     renderPageTheme();
+
+    // Render weather data for default city
     renderWeatherSearch(infoModule.currentCity);
 }
 
-export { loadPage };
+export {
+    renderPageTheme,
+    renderWeatherData,
+    renderWeatherSearch,
+    hideErrorSection,
+    renderInitialPage,
+};
