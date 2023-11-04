@@ -1,11 +1,6 @@
 /*
 - File for creating and returning the initial page elements
-
-
 */
-
-import { unitModule } from "./modules.js";
-
 function createProjectHeader() {
     const projectHeader = document.createElement("header");
     projectHeader.id = "project-header";
@@ -116,42 +111,42 @@ function createProjectMainContent() {
         Temp: {
             displayText: "Temp",
             id: "current-temp-el",
-            classes: [unitModule.temp, unitModule.unitConversion],
+            classes: ["temp-el"],
         },
         "Feels Like": {
             displayText: "Feels Like",
             id: "current-feels-like-temp-el",
-            classes: [unitModule.temp, unitModule.unitConversion],
+            classes: ["temp-el"],
         },
         Humidity: {
             displayText: "Humidity",
             id: "current-humidity-el",
-            classes: [unitModule.humidity, unitModule.usePercent],
+            classes: ["humidity-el", "uses-percentage"],
         },
         "Wind Speed": {
             displayText: "Wind Speed",
             id: "current-wind-speed-el",
-            classes: [unitModule["wind speed"], unitModule.unitConversion],
+            classes: ["wind-speed-el"],
         },
         Precipitation: {
             displayText: "Precipitation",
             id: "current-precipitation-el",
-            classes: [unitModule.precipitation, unitModule.unitConversion],
+            classes: ["precipitation-el"],
         },
         "Cloud Coverage": {
             displayText: "Cloud Coverage",
             id: "current-cloud-coverage-el",
-            classes: [unitModule["cloud coverage"], unitModule.usePercent],
+            classes: ["cloud-coverage-el", "uses-percentage"],
         },
         Pressure: {
             displayText: "Pressure",
             id: "current-pressure-el",
-            classes: [unitModule.pressure, unitModule.unitConversion],
+            classes: ["pressure-el"],
         },
         "UV Index": {
             displayText: "UV Index",
             id: "current-uv-index-el",
-            classes: [unitModule["Uv Index"]],
+            classes: ["uv-index-el"],
         },
     };
 
@@ -189,32 +184,8 @@ function createProjectMainContent() {
     gifImg.alt = "Weather related gif";
     gifContainer.appendChild(gifImg);
 
-    // Create div container for table so that it doesn't overflow
-    const tableContainer = document.createElement("div");
-    tableContainer.id = "forecast-table-container";
-
-    // Create table for the forecast data
-    const forecastTable = document.createElement("table");
-    forecastTable.id = "forecast-data-table";
-    forecastTable.innerHTML = `
-		<caption>
-			Forecast weather!
-		</caption>
-		<thead id="forecast-row-labels">
-			<tr>
-				<th class="date-col" >Date</th>
-				<th class="weather-condition-col" >Weather Condition</th>
-				<th class="chance-rain-col" >Chance of Rain</th>
-				<th class="humidity-col" >Humidity</th>
-				<th class="precipiation-col" >Precipitation</th>
-				<th class="avg-temp-col" >Avg. Temp</th>
-				<th class="high-temp-col" >High Temp</th>
-				<th class="low-temp-col" >Low Temp</th>
-			</tr>
-		</thead>
-		<tbody id="forecast-table-body">
-		</tbody>
-		`;
+    const forecastSection = document.createElement("div");
+    forecastSection.id = "forecast-section";
 
     // Appending all of the sections together properly to create the intended markup structure
     mainContentSection.appendChild(dailyWeatherSection);
@@ -222,8 +193,7 @@ function createProjectMainContent() {
     dailyWeatherSection.appendChild(dailyWeatherBody);
     dailyWeatherBody.appendChild(weatherDataGrid);
     mainContentSection.appendChild(gifContainer);
-    tableContainer.appendChild(forecastTable);
-    mainContentSection.appendChild(tableContainer);
+    mainContentSection.appendChild(forecastSection);
     return mainContentSection;
 }
 

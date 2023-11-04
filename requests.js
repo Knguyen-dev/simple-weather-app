@@ -1,3 +1,7 @@
+/*
+- Choose what data that we want and put that data into an object. dataObj is will be json that's gathered from the api call.
+
+*/
 function processWeatherData(dataObj) {
     let processedData = {
         // Weather related data for the current day

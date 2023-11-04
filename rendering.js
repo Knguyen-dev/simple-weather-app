@@ -1,4 +1,4 @@
-import { infoModule, unitModule, DomModule } from "./modules.js";
+import { infoModule, DomModule } from "./modules.js";
 import * as requests from "./requests.js";
 
 // ***** Error rendering section *****
@@ -47,46 +47,47 @@ async function renderWeatherData(inputLocation) {
 			2. Then fill out data for the daily-weather-section 
 		*/
         const data = await requests.fetchForecastData(inputLocation);
-        DomModule.forecastTableBody.innerHTML = data.forecast
+
+        DomModule.forecastSection.innerHTML = data.forecast
             .map((day) => {
                 return `
-				<tr class="forecast-day">
-					<th class="date-col forecast-date-el">${day.forecastDate}</th>
-					<th class="weather-condition-col forecast-weather-condition-el">
-						<img src="${day.weatherIcon}" alt="some icon" />
-					</th>
-					<th class="chance-rain-col ${unitModule["chance rain"]} ${
-                    unitModule.usePercent
-                }">
-						${day.daily_chance_of_rain}
-					</th>
-					<th class="humidity-col ${unitModule.humidity} ${unitModule.usePercent}">
-						${day.avghumidity}
-					</th>
-					<th class="precipiation-col ${unitModule.precipitation} ${
-                    unitModule.unitConversion
-                }">
-						${infoModule.isMetric ? day.totalprecip_mm : day.totalprecip_in}
-					</th>
-					<th class="avg-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
-						${infoModule.isMetric ? day.avgtemp_c : day.avgtemp_f}
-					</th>
-					<th class="high-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
-						${infoModule.isMetric ? day.maxtemp_c : day.maxtemp_f}
-					</th>
-					<th class="low-temp-col ${unitModule.temp} ${unitModule.unitConversion}">
-						${infoModule.isMetric ? day.mintemp_c : day.mintemp_f}
-					</th>
-				</tr>
-				`;
+            <div class="forecast-day">
+                <header class="forecast-day-header">
+                    <h2>${day.forecastDate}</h2>
+                    <div forecast-image-container>
+                        <img src="${day.weatherIcon}"/>
+                    </div>
+                </header>
+                <section class="forecast-day-body">
+                    <p class="chance-rain-el uses-percentage">Chance Rain: ${
+                        day.daily_chance_of_rain
+                    }</p>
+                    <p class="humidity-el uses-percentage">Humidity: ${
+                        day.avghumidity
+                    }</p>
+                    <p class="precipitation-el units-can-convert">Precipitation: ${
+                        infoModule.isMetric
+                            ? day.totalprecip_mm
+                            : day.totalprecip_in
+                    }</p>
+                    <p class="temp-el">Avg Temp: ${
+                        infoModule.isMetric ? day.avgtemp_c : day.avgtemp_f
+                    }</p>
+                    <p class="temp-el">Max Temp: ${
+                        infoModule.isMetric ? day.maxtemp_c : day.maxtemp_f
+                    }</p>
+                    <p class="temp-el">Min Temp: ${
+                        infoModule.isMetric ? day.mintemp_c : day.mintemp_f
+                    }</p>
+                </section>
+            </div>`;
             })
             .join("");
 
-        // Get all element where we can convert units and change their data attribute 'isMetricUnits'
-        const unitElements = DomModule.getAllUnitElements();
-        unitElements.forEach((element) => {
-            element.setAttribute("data-is-metric-units", infoModule.isMetric);
-        });
+        DomModule.projectContainer.setAttribute(
+            "data-use-metric-units",
+            infoModule.isMetric
+        );
 
         // Fill out fields of information for the daily-weather-section
         DomModule.locationEl.textContent = `${data.location.name}, ${data.location.country}`;
@@ -94,7 +95,11 @@ async function renderWeatherData(inputLocation) {
         DomModule.localTimeEl.textContent = data.location.localtime;
         DomModule.weatherConditionText.textContent =
             data.current.weatherCondition;
-        // Decide whether to display metric or imperial units for the daily-weather-section
+        DomModule.humidityEl.textContent = data.current.humidity;
+        DomModule.cloudCoverageEl.textContent = data.current.cloud;
+        DomModule.uvIndexEl.textContent = data.current.uv;
+
+        // Fill out either metric or standard units for the daily-weather-section
         if (infoModule.isMetric) {
             DomModule.tempEl.textContent = data.current.temp_c;
             DomModule.feelsLikeTempEl.textContent = data.current.feelslike_c;
@@ -108,9 +113,6 @@ async function renderWeatherData(inputLocation) {
             DomModule.precipitationEl.textContent = data.current.precip_in;
             DomModule.pressureEl.textContent = data.current.pressure_in;
         }
-        DomModule.humidityEl.textContent = data.current.humidity;
-        DomModule.cloudCoverageEl.textContent = data.current.cloud;
-        DomModule.uvIndexEl.textContent = data.current.uv;
 
         /*
 		- At this point, the fetch request was successful, so the city was valid. 

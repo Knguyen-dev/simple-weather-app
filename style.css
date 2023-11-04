@@ -19,6 +19,7 @@ img,
 picture,
 video {
     max-width: 100%;
+    height: auto;
 }
 
 a {
@@ -138,7 +139,9 @@ never be smaller than the full view height.
 #project-header,
 #project-footer,
 #daily-weather-header,
-#daily-weather-body {
+#daily-weather-body,
+.forecast-day-header,
+.forecast-day-body {
     transition: var(--transition);
 }
 
@@ -244,6 +247,7 @@ never be smaller than the full view height.
 }
 #daily-weather {
     width: 40%;
+    min-width: 150px;
 }
 #daily-weather-header,
 #daily-weather-body {
@@ -297,60 +301,69 @@ never be smaller than the full view height.
     font-size: 24px;
 }
 
-/* Styling for the forecast-section */
 #forecast-section {
-    background-color: orange;
-    width: 80%;
-}
-.forecast-row {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    column-gap: 2em;
+    row-gap: 3em;
+    flex-wrap: wrap;
 }
 
-/* Styling for the forecast table */
-#forecast-table-container {
-    overflow-x: auto;
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: var(--clr-dark-slate);
+    font-size: 1.4em;
 }
-#forecast-data-table {
-    table-layout: fixed;
-    color: white;
-    border-collapse: collapse;
-    border: 2px solid white;
+
+.forecast-day-header {
+    padding: 4px 16px;
+    background-color: var(--clr-dark-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 2em;
+    width: 100%;
 }
-#forecast-data-table th,
-#forecast-data-table tr {
-    padding: 16px;
+
+.forecast-day-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 6px;
+    padding: 1em;
+    width: 100%;
 }
 
 /* Styling for unit conversion or usage of percentages*/
-.temp-el[data-is-metric-units="false"]::after {
-    content: " °F";
-}
-.temp-el[data-is-metric-units="true"]::after {
+.project-container[data-use-metric-units="true"] .temp-el::after {
     content: " °C";
 }
-.precipitation-el[data-is-metric-units="false"]::after {
-    content: " in";
+.project-container[data-use-metric-units="false"] .temp-el::after {
+    content: " °F";
 }
-.precipitation-el[data-is-metric-units="true"]::after {
+.project-container[data-use-metric-units="true"] .precipitation-el::after {
     content: " mm";
 }
-.wind-speed-el[data-is-metric-units="false"]::after {
-    content: " mph";
-}
-.wind-speed-el[data-is-metric-units="true"]::after {
-    content: " kph";
-}
-.wind-speed-el[data-is-metric-units="false"]::after {
-    content: " mph";
-}
-.wind-speed-el[data-is-metric-units="true"]::after {
-    content: " kph";
-}
-.pressure-el[data-is-metric-units="false"]::after {
+.project-container[data-use-metric-units="false"] .precipitation-el::after {
     content: " in";
 }
-.pressure-el[data-is-metric-units="true"]::after {
+.project-container[data-use-metric-units="true"] .wind-speed-el::after {
+    content: " kph";
+}
+.project-container[data-use-metric-units="false"] .wind-speed-el::after {
+    content: " mph";
+}
+.project-container[data-use-metric-units="true"] .pressure-el::after {
     content: " mb";
+}
+.project-container[data-use-metric-units="false"] .pressure-el::after {
+    content: " in";
 }
 .uses-percentage::after {
     content: "%";
@@ -407,6 +420,14 @@ the color on the main containers and whatnot.
     color: var(--clr-dark-sky);
 }
 
+.light-mode .forecast-day-header {
+    background-color: var(--clr-emerald);
+}
+.light-mode .forecast-day-body {
+    color: var(--clr-dark-sky);
+    background-color: var(--clr-light-teal);
+}
+
 /* Making it a little responsive  */
 @media screen and (max-width: 800px) {
     #header-nav {
@@ -418,23 +439,18 @@ the color on the main containers and whatnot.
     }
 }
 
-@media screen and (max-width: 750px) {
-    .low-temp-col {
-        display: none;
+@media screen and (max-width: 500px) {
+    .forecast-day {
+        font-size: 1em;
     }
-}
-@media screen and (max-width: 650px) {
-    .high-temp-col {
-        display: none;
-    }
-}
-@media screen and (max-width: 550px) {
-    .weather-condition-col {
-        display: none;
-    }
-}
-@media screen and (max-width: 450px) {
-    .weather-condition-col {
-        display: none;
+    #footer-nav-el,
+    .extra-btns,
+    .site-info,
+    #search-weather-form,
+    .daily-weather-header-top,
+    .daily-weather-header-bottom,
+    .forecast-day-header {
+        flex-direction: column;
+        row-gap: 8px;
     }
 }

@@ -8,27 +8,13 @@ const infoModule = {
     isDarkTheme: true, // whether site is using dark theme of not
 };
 
-// Object of general classes for showing percentages and unit symbols
-const unitModule = {
-    temp: "temp-el",
-    "chance rain": "chance-rain-el",
-    "wind speed": "wind-speed-el",
-    precipitation: "precipitation-el",
-    pressure: "pressure-el",
-    "cloud coverage": "cloud-coverage-el",
-    "Uv Index": "uv-index-el",
-    humidity: "humidity-el",
-    precipitation: "precipitation-el",
-    pressure: "pressure-el",
-    unitConversion: "units-can-convert",
-    usePercent: "uses-percentage",
-};
-
 // IFFE returns a module containing  all of the necessary DOM elements that may be needed
 const DomModule = (() => {
     // Puts all of content and elements onto the screen
     const initialPage = createInitialPage();
     document.body.appendChild(initialPage);
+
+    const projectContainer = document.querySelector(".project-container");
 
     // Query all of the necessary DOM elements that you need after page has loaded
     // and elements are on the DOM
@@ -69,13 +55,11 @@ const DomModule = (() => {
     const dailyWeatherSection = document.querySelector("#daily-weather");
     const gifContainer = document.querySelector("#gif-container");
     const gifImg = document.querySelector("#gif-img");
-    const forecastTable = document.querySelector("#forecast-data-table");
-    const forecastTableBody = document.querySelector("#forecast-table-body");
 
-    const getAllUnitElements = () => {
-        return document.querySelectorAll(`.${unitModule.unitConversion}`);
-    };
+    const forecastSection = document.querySelector("#forecast-section");
+
     return {
+        projectContainer,
         overlayDiv,
         errorSection,
         mainErrorEl,
@@ -100,10 +84,8 @@ const DomModule = (() => {
         dailyWeatherSection,
         gifContainer,
         gifImg,
-        forecastTable,
-        forecastTableBody,
-        getAllUnitElements,
+        forecastSection,
     };
 })();
 
-export { infoModule, DomModule, unitModule };
+export { infoModule, DomModule };
